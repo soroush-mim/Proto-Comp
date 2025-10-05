@@ -26,6 +26,9 @@ class PCN(data.Dataset):
         self.npoints = config.N_POINTS
         self.subset = config.subset
         self.cars = config.CARS
+        with open(config.CAPTION_FILE_PATH, "r") as f:
+            self.captions = json.load(f)
+
 
         # Load the dataset indexing file
         self.dataset_categories = []
@@ -117,8 +120,11 @@ class PCN(data.Dataset):
 
         if self.transforms is not None:
             data = self.transforms(data)
+        
+        caption_key = f"{sample['taxonomy_id']}_{sample['model_id']}"
+        caption = self.captions.get(caption_key, "")
 
-        return sample["taxonomy_id"], sample["model_id"], (data["partial"], data["gt"])
+        return sample["taxonomy_id"], sample["model_id"], (data["partial"], data["gt"]), caption
 
     def __len__(self):
         return len(self.file_list)

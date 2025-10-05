@@ -146,3 +146,5 @@ data/ShapeNet55/shapenet_pc
 
 
 
+data/PCN/Cap3D_automated_ShapeNet.json
+data/PCN/Cap3D_automated_ShapeNet.csv
