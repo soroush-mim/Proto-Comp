@@ -388,7 +388,7 @@ def validate(
     random_numbers = sorted(random.sample(all_numbers, 30))
 
     with torch.no_grad():
-        for idx, (taxonomy_ids, model_ids, data) in enumerate(test_dataloader):
+        for idx, (taxonomy_ids, model_ids, data, captions) in enumerate(test_dataloader):
             if (idx + 1) in random_numbers:
                 taxonomy_id = (
                     taxonomy_ids[0]
@@ -425,13 +425,15 @@ def validate(
 
                 angle_text = [config.angle_dict[str(i)] for i in rotation_angle]
                 prompt = []
-                for idx__, ids in enumerate(taxonomy_ids):
-                    if torch.rand(1).item() > 0.5:
-                        prompt.append(
-                            angle_text[idx__] + prompt_dict[ids] + angle_text[idx__]
-                        )
-                    else:
-                        prompt.append("")
+                for idx__, caption in enumerate(captions):
+                    prompt.append(angle_text[idx__] + caption + angle_text[idx__])
+                # for idx__, ids in enumerate(taxonomy_ids):
+                #     if torch.rand(1).item() > 0.5:
+                #         prompt.append(
+                #             angle_text[idx__] + prompt_dict[ids] + angle_text[idx__]
+                #         )
+                #     else:
+                #         prompt.append("")
                 rotation_angle = rotation_angle / 4 * 2 * np.pi
 
                 gt = rotate_transform(gt.clone(), rotation_angle)
